@@ -27,7 +27,27 @@
           </el-menu-item>
         </template>
 
-        <!-- Sprint 2 将在此处添加 REPAIRER 和 ADMIN 菜单 -->
+        <template v-if="userStore.role === 'REPAIRER'">
+          <el-menu-item index="/repairer/tasks">
+            <el-icon><List /></el-icon>
+            <span>我的任务</span>
+          </el-menu-item>
+        </template>
+
+        <template v-if="userStore.role === 'ADMIN'">
+          <el-menu-item index="/admin/users">
+            <el-icon><User /></el-icon>
+            <span>用户管理</span>
+          </el-menu-item>
+          <el-menu-item index="/admin/dispatch">
+            <el-icon><Connection /></el-icon>
+            <span>派单管理</span>
+          </el-menu-item>
+          <el-menu-item index="/admin/statistics">
+            <el-icon><DataAnalysis /></el-icon>
+            <span>数据统计</span>
+          </el-menu-item>
+        </template>
 
         <el-menu-item index="/profile">
           <el-icon><UserFilled /></el-icon>
@@ -70,6 +90,10 @@ const pageTitle = computed(() => {
     '/dashboard': '工作台',
     '/repair/submit': '提交报修',
     '/repair/my-orders': '我的报修',
+    '/repairer/tasks': '我的任务',
+    '/admin/users': '用户管理',
+    '/admin/dispatch': '派单管理',
+    '/admin/statistics': '数据统计',
     '/profile': '个人中心'
   }
   return map[route.path] || '社区物业报修管理系统'

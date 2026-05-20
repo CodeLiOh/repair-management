@@ -37,6 +37,31 @@ const routes = [
         component: () => import('../views/resident/RepairDetail.vue')
       },
       {
+        path: 'repairer/tasks',
+        name: 'MyTasks',
+        component: () => import('../views/repairer/MyTasks.vue')
+      },
+      {
+        path: 'repairer/task/:id',
+        name: 'TaskDetail',
+        component: () => import('../views/repairer/TaskDetail.vue')
+      },
+      {
+        path: 'admin/users',
+        name: 'UserManage',
+        component: () => import('../views/admin/UserManage.vue')
+      },
+      {
+        path: 'admin/dispatch',
+        name: 'DispatchManage',
+        component: () => import('../views/admin/DispatchManage.vue')
+      },
+      {
+        path: 'admin/statistics',
+        name: 'Statistics',
+        component: () => import('../views/admin/Statistics.vue')
+      },
+      {
         path: 'profile',
         name: 'Profile',
         component: () => import('../views/Profile.vue')
