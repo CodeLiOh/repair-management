@@ -20,25 +20,55 @@
       <el-descriptions-item label="维修工">{{ detail.repairerName || '待分配' }}</el-descriptions-item>
     </el-descriptions>
 
-    <!-- Sprint 2 将在此处添加评价功能 -->
+    <div v-if="detail.status === 'PENDING_CHECK'" style="margin-top:20px">
+      <h4>评价维修服务</h4>
+      <el-form :model="reviewForm" label-width="80px" style="max-width:400px">
+        <el-form-item label="评分">
+          <el-rate v-model="reviewForm.rating" />
+        </el-form-item>
+        <el-form-item label="评价内容">
+          <el-input v-model="reviewForm.comment" type="textarea" :rows="3" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitReview" :loading="submitting">提交评价</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </el-card>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { repairApi } from '../../api'
+import { repairApi, reviewApi } from '../../api'
+import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 const detail = ref({})
 const loading = ref(false)
+const submitting = ref(false)
+const reviewForm = reactive({ repairOrderId: null, rating: 5, comment: '' })
 
 const loadDetail = async () => {
   loading.value = true
   try {
     const res = await repairApi.getDetail(route.params.id)
     detail.value = res.data
+    reviewForm.repairOrderId = res.data.id
   } catch (e) {} finally { loading.value = false }
+}
+
+const submitReview = async () => {
+  if (reviewForm.rating === 0) {
+    ElMessage.warning('请选择评分')
+    return
+  }
+  submitting.value = true
+  try {
+    await reviewApi.submit(reviewForm)
+    ElMessage.success('评价提交成功')
+    loadDetail()
+  } catch (e) {} finally { submitting.value = false }
 }
 
 const urgencyType = (v) => ({ NORMAL: '', URGENT: 'warning', CRITICAL: 'danger' }[v] || '')

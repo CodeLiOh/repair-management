@@ -24,7 +24,47 @@
       </el-col>
     </el-row>
 
-    <!-- Sprint 2 将在此处添加 REPAIRER 和 ADMIN 卡片 -->
+    <el-row :gutter="20" style="margin-top:20px" v-if="userStore.role === 'REPAIRER'">
+      <el-col :span="8">
+        <el-card shadow="hover" @click="$router.push('/repairer/tasks')" class="clickable-card">
+          <div class="card-inner">
+            <el-icon :size="40" color="#409EFF"><List /></el-icon>
+            <h3>我的任务</h3>
+            <p>查看和处理维修任务</p>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20" style="margin-top:20px" v-if="userStore.role === 'ADMIN'">
+      <el-col :span="6">
+        <el-card shadow="hover" @click="$router.push('/admin/users')" class="clickable-card">
+          <div class="card-inner">
+            <el-icon :size="40" color="#409EFF"><User /></el-icon>
+            <h3>用户管理</h3>
+            <p>管理用户和权限</p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card shadow="hover" @click="$router.push('/admin/dispatch')" class="clickable-card">
+          <div class="card-inner">
+            <el-icon :size="40" color="#E6A23C"><Connection /></el-icon>
+            <h3>派单管理</h3>
+            <p>审核并派发工单</p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card shadow="hover" @click="$router.push('/admin/statistics')" class="clickable-card">
+          <div class="card-inner">
+            <el-icon :size="40" color="#67C23A"><DataAnalysis /></el-icon>
+            <h3>数据统计</h3>
+            <p>查看系统数据</p>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
