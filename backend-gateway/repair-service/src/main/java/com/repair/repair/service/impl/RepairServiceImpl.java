@@ -1,14 +1,15 @@
-package com.repair.repair.service.impl;
+package com.repair.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.repair.common.exception.BusinessException;
-import com.repair.common.dto.RepairOrderDTO;
-import com.repair.common.entity.Category;
-import com.repair.common.entity.RepairOrder;
-import com.repair.repair.mapper.CategoryMapper;
-import com.repair.repair.mapper.RepairOrderMapper;
-import com.repair.repair.service.RepairService;
-import com.repair.common.vo.RepairOrderVO;
+import com.repair.common.BusinessException;
+import com.repair.dto.RepairOrderDTO;
+import com.repair.entity.Category;
+import com.repair.entity.RepairOrder;
+import com.repair.mapper.CategoryMapper;
+import com.repair.mapper.RepairOrderMapper;
+import com.repair.service.RepairService;
+import com.repair.vo.RepairOrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class RepairServiceImpl extends ServiceImpl<RepairOrderMapper, RepairOrde
         order.setDescription(dto.getDescription());
         order.setUrgency(dto.getUrgency());
         order.setImages(dto.getImages());
-        order.setStatus("PENDING_REVIEW");
+        order.setStatus("PENDING_DISPATCH");
         if (dto.getAppointTime() != null && !dto.getAppointTime().isEmpty()) {
             order.setAppointTime(java.time.LocalDateTime.parse(dto.getAppointTime()));
         }
@@ -61,7 +62,7 @@ public class RepairServiceImpl extends ServiceImpl<RepairOrderMapper, RepairOrde
         if (!order.getUserId().equals(userId)) {
             throw new BusinessException("只能撤销自己的报修单");
         }
-        if (!"PENDING_REVIEW".equals(order.getStatus()) && !"PENDING_DISPATCH".equals(order.getStatus())) {
+        if (!"PENDING_DISPATCH".equals(order.getStatus())) {
             throw new BusinessException("当前状态不可撤销");
         }
         order.setStatus("CANCELLED");
@@ -82,24 +83,5 @@ public class RepairServiceImpl extends ServiceImpl<RepairOrderMapper, RepairOrde
     public Category addCategory(Category category) {
         categoryMapper.insert(category);
         return category;
-    }
-
-    @Override
-    public RepairOrder getOrderById(Long id) {
-        RepairOrder order = getById(id);
-        if (order == null) {
-            throw new BusinessException("报修单不存在");
-        }
-        return order;
-    }
-
-    @Override
-    public void updateOrderStatus(Long id, String status) {
-        RepairOrder order = getById(id);
-        if (order == null) {
-            throw new BusinessException("报修单不存在");
-        }
-        order.setStatus(status);
-        updateById(order);
     }
 }
